@@ -34,7 +34,8 @@ Wait Until Element Is Clickable
     ...    The overall wait never exceeds 90 seconds.
     [Arguments]    ${locator}    ${timeout}=${MAX_CLICKABLE_TIMEOUT}
     Scroll Element Into View Safely    ${locator}
-    Element Should Be Clickable    ${locator}
+    # Wait until element is reported clickable (Element Should Be Clickable now handles its own retries)
+    Element Should Be Clickable    ${locator}    ${timeout}
     ${seconds}=    Convert Time    ${timeout}    result_format=number
     ${max_seconds}=    Convert Time    ${MAX_CLICKABLE_TIMEOUT}    result_format=number
     ${capped}=    Set Variable If    ${seconds} < ${max_seconds}    ${seconds}    ${max_seconds}
@@ -50,27 +51,42 @@ Wait Until Element Is Clickable
     #Log To Console    Click succeeded after ${attempt_count} attempts
 
 Element Should Be Clickable
-    [Documentation]    Helper used by "Wait Until Element Is Clickable". Checks
-    ...    visibility, enabled state, and CSS blockers via JS in a single pass.
-    [Arguments]    ${locator}
-    ${element}=    Get WebElement    ${locator}
-    ${is_clickable}=    Execute Javascript
-    ...    var el = arguments[0];
-    ...    try {
-    ...      var r = el.getBoundingClientRect();
-    ...      var s = window.getComputedStyle(el);
-    ...      var visible = (r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && parseFloat(s.opacity||1) > 0);
-    ...      var enabled = (typeof el.disabled === 'undefined' ? true : !el.disabled) && s.pointerEvents !== 'none';
-    ...      if (!visible || !enabled) return false;
-    ...      var x = r.left + r.width/2;
-    ...      var y = r.top + r.height/2;
-    ...      var top = document.elementFromPoint(x, y);
-    ...      if (!top) return false;
-    ...      while (top && top.shadowRoot) { top = top.shadowRoot.elementFromPoint(x, y); }
-    ...      return (el === top || el.contains(top));
-    ...    } catch (e) { return false; }
-    ...    ARGUMENTS    ${element}
-    Should Be True    ${is_clickable}    msg=Element '${locator}' not clickable
+    [Documentation]    Helper used by "Wait Until Element Is Clickable". Waits until
+    ...    visibility, enabled state, and CSS blockers via JS report the element as
+    ...    clickable. Retries until timeout.
+    [Arguments]    ${locator}    ${timeout}=${MAX_CLICKABLE_TIMEOUT}
+    ${seconds}=    Convert Time    ${timeout}    result_format=number
+    ${max_seconds}=    Convert Time    ${MAX_CLICKABLE_TIMEOUT}    result_format=number
+    ${capped}=    Set Variable If    ${seconds} < ${max_seconds}    ${seconds}    ${max_seconds}
+    ${retry_interval_seconds}=    Convert Time    ${RETRY_INTERVAL}    result_format=number
+    ${attempts}=    Evaluate    int(${capped}/${retry_interval_seconds}) + 1
+    ${range_end}=    Evaluate    ${attempts} + 1
+    FOR    ${index}    IN RANGE    1    ${range_end}
+        ${status_get}    ${element}=    Run Keyword And Ignore Error    Get WebElement    ${locator}
+        IF    '${status_get}' == 'PASS'
+            ${is_clickable}=    Execute Javascript
+            ...    var el = arguments[0];
+            ...    try {
+            ...      var r = el.getBoundingClientRect();
+            ...      var s = window.getComputedStyle(el);
+            ...      var visible = (r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && parseFloat(s.opacity||1) > 0);
+            ...      var enabled = (typeof el.disabled === 'undefined' ? true : !el.disabled) && s.pointerEvents !== 'none';
+            ...      if (!visible || !enabled) return false;
+            ...      var x = r.left + r.width/2;
+            ...      var y = r.top + r.height/2;
+            ...      var top = document.elementFromPoint(x, y);
+            ...      if (!top) return false;
+            ...      while (top && top.shadowRoot) { top = top.shadowRoot.elementFromPoint(x, y); }
+            ...      return (el === top || el.contains(top));
+            ...    } catch (e) { return false; }
+            ...    ARGUMENTS    ${element}
+            IF    ${is_clickable}
+                Return From Keyword
+            END
+        END
+        Sleep    ${RETRY_INTERVAL}
+    END
+    Fail    msg=Element '${locator}' not clickable after ${capped} seconds
 
 Scroll To Element And Click
     [Documentation]    Scrolls the element into view - useful when it's below the fold
