@@ -117,7 +117,7 @@ Get Text From Element
         Sleep    ${RETRY_INTERVAL}
     END
     ${text}=    Get Text    ${locator}
-    [Return]    ${text}
+    Return    ${text}
 
 Scroll Element Into View Safely
     [Documentation]    Scrolls the element into the center of the viewport, verifies it's in view, and focuses it for better reliability.

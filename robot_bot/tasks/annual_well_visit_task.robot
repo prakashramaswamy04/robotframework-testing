@@ -7,7 +7,7 @@ Library    String
 Library    ../libraries/launch_utils.py
 Resource    ../pages/login_page.resource
 Resource    ../features/report_flow.resource
-Resource    ../resources/common/common.robot
+Resource    ../resources/common/common.resource
 Resource    ../variables/task_variables.resource
 Suite Setup    Log To Console    Starting Annual Well Visit report flow
 Suite Teardown    Cleanup After Run

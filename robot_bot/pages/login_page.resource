@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    ../resources/common/common.robot
+Resource    ../resources/common/common.resource
 Resource    ../keywords/navigation_keywords.resource
 
 *** Variables ***

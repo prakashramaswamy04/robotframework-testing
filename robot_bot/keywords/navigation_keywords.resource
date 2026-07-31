@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    ../resources/common/common.robot
+Resource    ../resources/common/common.resource
 
 *** Variables ***
 ${MENU_BUTTON}    xpath=//button[contains(@aria-label, 'menu') or contains(@class, 'menu') or contains(@id, 'menu')]
