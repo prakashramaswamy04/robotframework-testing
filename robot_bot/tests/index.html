@@ -1,0 +1,104 @@
+<!doctype html>
+<!-- Local mock portal used by the Robot Framework suites. -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Care Reports Test Portal</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section id="login-view" class="login-card" aria-labelledby="login-title">
+        <p class="eyebrow">Demo environment</p>
+        <h1 id="login-title">Care Reports</h1>
+        <p class="muted">Sign in to review practice-quality reports.</p>
+        <form id="login-form">
+          <label for="username">Username</label>
+          <input id="username" name="username" autocomplete="username" required />
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+          <button id="login-button" type="submit">Sign in</button>
+        </form>
+        <p id="login-error" class="error" role="alert" hidden></p>
+        <p class="hint">Use any username and password in this local test application.</p>
+      </section>
+
+      <section id="app-view" class="app" hidden>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Quality dashboard</p>
+            <h1>Care Reports</h1>
+          </div>
+          <div class="topbar-actions">
+            <button id="menu-button" class="menu-button" aria-label="Open menu" aria-expanded="false">Menu <span aria-hidden="true">⌄</span></button>
+            <a id="logout-link" href="#logout">Logout</a>
+          </div>
+        </header>
+
+        <nav id="menu-panel" class="menu-panel" aria-label="Application menu" hidden>
+          <section>
+            <h2>Reporting quarter</h2>
+            <ul class="quarter-list" aria-label="Quarter options">
+              <li role="option" tabindex="0">Q1</li>
+              <li role="option" tabindex="0">Q2</li>
+              <li role="option" tabindex="0">Q3</li>
+              <li role="option" tabindex="0">Q4</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Navigation</h2>
+            <a href="#reports" data-view="reports">Reports</a>
+          </section>
+        </nav>
+
+        <section id="home-view" class="content">
+          <p class="eyebrow">Welcome</p>
+          <h2>Choose a reporting quarter</h2>
+          <p>Select the menu, choose a quarter, then open Reports to start.</p>
+          <p id="quarter-status" class="status">No quarter selected</p>
+        </section>
+
+        <section id="reports-view" class="content" hidden>
+          <p class="eyebrow">Reports</p>
+          <h2>Report categories</h2>
+          <div class="report-grid">
+            <a href="#continuity" data-view="continuity" class="report-card">
+              <h3>Continuity of Care</h3><p>Preventive and ongoing care measures.</p>
+            </a>
+            <a href="#general" data-view="general" class="report-card">
+              <h3>General</h3><p>Utilization and admissions reporting.</p>
+            </a>
+          </div>
+        </section>
+
+        <section id="continuity-view" class="content" hidden>
+          <p class="eyebrow">Reports / Continuity of Care</p>
+          <h2>Continuity of Care</h2>
+          <a href="#annual-well-visit" data-report="Annual Well Visit" class="report-card"><h3>Annual Well Visit</h3><p>View annual preventive-visit performance.</p></a>
+        </section>
+
+        <section id="general-view" class="content" hidden>
+          <p class="eyebrow">Reports / General</p>
+          <h2>General</h2>
+          <div class="report-grid">
+            <a href="#er-visits" data-report="ER Visits By Practice" class="report-card"><h3>ER Visits By Practice</h3><p>Emergency-room visits grouped by practice.</p></a>
+            <a href="#ip-admissions" data-report="IP Admissions By Practice" class="report-card"><h3>IP Admissions By Practice</h3><p>Inpatient admissions grouped by practice.</p></a>
+          </div>
+        </section>
+
+        <section id="report-view" class="content" hidden aria-live="polite">
+          <p id="report-breadcrumb" class="eyebrow">Reports</p>
+          <h2 id="report-title"></h2>
+          <p id="report-description"></p>
+          <div class="report-summary">
+            <div><span>Quarter</span><strong id="report-quarter">Not selected</strong></div>
+            <div><span>Practices</span><strong>12</strong></div>
+            <div><span>Last refreshed</span><strong>Today</strong></div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

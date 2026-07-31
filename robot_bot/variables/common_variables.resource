@@ -1,0 +1,4 @@
+*** Variables ***
+${DEFAULT_TIMEOUT}    10s
+${MAX_CLICKABLE_TIMEOUT}    90s
+${RETRY_INTERVAL}    0.25s
