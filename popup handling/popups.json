@@ -1,0 +1,39 @@
+{
+  "popups": [
+    {
+      "id": "cross_generic_1",
+      "category": "cross",
+      "xpaths": [
+        "//button[contains(translate(@aria-label,'CLOSE','close'),'close')]",
+        "//*[contains(@class,'close-icon') or contains(@class,'icon-close')]",
+        "//div[contains(@class,'modal')]//button[contains(text(),'\u00d7')]",
+        "//span[text()='\u00d7']/parent::button"
+      ]
+    },
+    {
+      "id": "no_generic_1",
+      "category": "no",
+      "xpaths": [
+        "//button[normalize-space(text())='No']",
+        "//button[contains(@class,'btn-no')]",
+        "//*[@role='dialog']//button[normalize-space()='No, thanks']"
+      ]
+    },
+    {
+      "id": "close_generic_1",
+      "category": "close",
+      "xpaths": [
+        "//button[normalize-space(text())='Close']",
+        "//button[contains(@class,'btn-close')]"
+      ]
+    },
+    {
+      "id": "yes_generic_1",
+      "category": "yes",
+      "xpaths": [
+        "//button[normalize-space(text())='Yes']",
+        "//button[contains(@class,'btn-yes')]"
+      ]
+    }
+  ]
+}

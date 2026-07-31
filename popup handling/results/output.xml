@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.3 on darwin)" generated="2026-07-24T23:09:05.854548" rpa="false" schemaversion="5">
+<suite id="s1" name="Popup Handling" source="/Users/prakash.ramaswamy/Downloads/popup handling">
+<suite id="s1-s1" name="Popup Handling Example" source="/Users/prakash.ramaswamy/Downloads/popup handling/popup_handling_example.robot">
+<test id="s1-s1-t1" name="Example Flow With Popup Handling" line="10">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-07-24T23:09:05.990268" level="INFO">Opening browser 'chrome' to base url 'https://example.com'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-07-24T23:09:05.990083" elapsed="6.171702"/>
+</kw>
+<kw name="Handle Known Popups" owner="popup_keywords">
+<kw name="Create Directory" owner="OperatingSystem">
+<msg time="2026-07-24T23:09:12.166126" level="INFO" html="true">Created directory '&lt;a href="file:///Users/prakash.ramaswamy/Downloads/popup handling/popup_screenshots"&gt;/Users/prakash.ramaswamy/Downloads/popup handling/popup_screenshots&lt;/a&gt;'.</msg>
+<arg>${SCREENSHOT_DIR}</arg>
+<doc>Creates the specified directory.</doc>
+<status status="PASS" start="2026-07-24T23:09:12.164091" elapsed="0.002321"/>
+</kw>
+<kw name="Load Popup Config" owner="popup_keywords">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-07-24T23:09:12.168986" level="INFO">${data} = {'popups': [{'id': 'cross_generic_1', 'category': 'cross', 'xpaths': ["//button[contains(translate(@aria-label,'CLOSE','close'),'close')]", "//*[contains(@class,'close-icon') or contains(@class,'icon-...</msg>
+<var>${data}</var>
+<arg>json.load(open(r'''${POPUPS_JSON}''', encoding='utf-8'))</arg>
+<arg>json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-07-24T23:09:12.167457" elapsed="0.001617"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-07-24T23:09:12.169889" level="INFO">${priority} = {'cross': 0, 'no': 1, 'close': 2, 'yes': 3}</msg>
+<var>${priority}</var>
+<arg>cross=${0}</arg>
+<arg>no=${1}</arg>
+<arg>close=${2}</arg>
+<arg>yes=${3}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-07-24T23:09:12.169216" elapsed="0.000734"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<msg time="2026-07-24T23:09:12.170476" level="INFO">${popups} = [{'id': 'cross_generic_1', 'category': 'cross', 'xpaths': ["//button[contains(translate(@aria-label,'CLOSE','close'),'close')]", "//*[contains(@class,'close-icon') or contains(@class,'icon-close')]", ...</msg>
+<var>${popups}</var>
+<arg>${data}</arg>
+<arg>popups</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="PASS" start="2026-07-24T23:09:12.170067" elapsed="0.000481"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-07-24T23:09:12.171261" level="FAIL">Evaluating expression "sorted($popups, key=lambda p: $priority.get(p.get('category'), 99))" failed: Robot Framework variable '$priority' is used in a scope where it cannot be seen.</msg>
+<var>${sorted_popups}</var>
+<arg>sorted($popups, key=lambda p: $priority.get(p.get('category'), 99))</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="FAIL" start="2026-07-24T23:09:12.170637" elapsed="0.005084">Evaluating expression "sorted($popups, key=lambda p: $priority.get(p.get('category'), 99))" failed: Robot Framework variable '$priority' is used in a scope where it cannot be seen.</status>
+</kw>
+<kw name="Set To Dictionary" owner="Collections">
+<arg>${data}</arg>
+<arg>popups=${sorted_popups}</arg>
+<doc>Adds the given ``key_value_pairs`` and/or ``items`` to the ``dictionary``.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.175969" elapsed="0.000165"/>
+</kw>
+<return>
+<value>${data}</value>
+<status status="NOT RUN" start="2026-07-24T23:09:12.176213" elapsed="0.000061"/>
+</return>
+<var>${popup_data}</var>
+<doc>Reads popups.json and returns it as a Robot dictionary,
+with the popups list sorted by category priority
+(cross=0, no=1, close=2, yes=3).</doc>
+<status status="FAIL" start="2026-07-24T23:09:12.166830" elapsed="0.009587">Evaluating expression "sorted($popups, key=lambda p: $priority.get(p.get('category'), 99))" failed: Robot Framework variable '$priority' is used in a scope where it cannot be seen.</status>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<var>${popups}</var>
+<arg>${popup_data}</arg>
+<arg>popups</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.176637" elapsed="0.000104"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<var>${closed_count}</var>
+<arg>${0}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.176839" elapsed="0.000049"/>
+</kw>
+<for flavor="IN RANGE">
+<iter>
+<kw name="Set Variable" owner="BuiltIn">
+<var>${closed_this_round}</var>
+<arg>${FALSE}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177193" elapsed="0.000040"/>
+</kw>
+<for flavor="IN">
+<iter>
+<kw name="Get From Dictionary" owner="Collections">
+<var>${category}</var>
+<arg>${popup}</arg>
+<arg>category</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177413" elapsed="0.000038"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<var>${xpaths}</var>
+<arg>${popup}</arg>
+<arg>xpaths</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177506" elapsed="0.000032"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<var>${id}</var>
+<arg>${popup}</arg>
+<arg>id</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177592" elapsed="0.000029"/>
+</kw>
+<for flavor="IN">
+<iter>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${visible}</var>
+<arg>Element Should Be Visible</arg>
+<arg>xpath:${xpath}</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177779" elapsed="0.000039"/>
+</kw>
+<if>
+<branch type="IF" condition="${visible}">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath:${xpath}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.178273" elapsed="0.000068"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>Closed popup '${id}' (category: ${category}) using xpath: ${xpath}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.178490" elapsed="0.000062"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.178624" elapsed="0.000036"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<var>${closed_count}</var>
+<arg>${closed_count} + 1</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.178716" elapsed="0.000032"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<var>${closed_this_round}</var>
+<arg>${TRUE}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.178799" elapsed="0.000035"/>
+</kw>
+<break>
+<status status="NOT RUN" start="2026-07-24T23:09:12.178871" elapsed="0.000040"/>
+</break>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177897" elapsed="0.001043"/>
+</branch>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177877" elapsed="0.001089"/>
+</if>
+<var name="${xpath}"/>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177712" elapsed="0.001272"/>
+</iter>
+<var>${xpath}</var>
+<value>@{xpaths}</value>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177654" elapsed="0.001360"/>
+</for>
+<if>
+<branch type="IF" condition="${closed_this_round}">
+<break>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179125" elapsed="0.000021"/>
+</break>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179087" elapsed="0.000080"/>
+</branch>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179077" elapsed="0.000108"/>
+</if>
+<var name="${popup}"/>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177362" elapsed="0.001832"/>
+</iter>
+<var>${popup}</var>
+<value>@{popups}</value>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177276" elapsed="0.001941"/>
+</for>
+<if>
+<branch type="IF" condition="not ${closed_this_round}">
+<break>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179295" elapsed="0.000019"/>
+</break>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179253" elapsed="0.000078"/>
+</branch>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179246" elapsed="0.000102"/>
+</if>
+<var name="${round}"/>
+<status status="NOT RUN" start="2026-07-24T23:09:12.177120" elapsed="0.002243"/>
+</iter>
+<var>${round}</var>
+<value>${max_rounds}</value>
+<status status="NOT RUN" start="2026-07-24T23:09:12.176949" elapsed="0.002448"/>
+</for>
+<return>
+<value>${closed_count}</value>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179436" elapsed="0.000031"/>
+</return>
+<doc>Scans popups.json in priority order (cross &gt; no &gt; close
+&gt; yes) and clicks the first visible match. Repeats up to
+${max_rounds} times since closing one popup can reveal another.
+Returns the number of popups closed.</doc>
+<status status="FAIL" start="2026-07-24T23:09:12.163606" elapsed="0.015958">Evaluating expression "sorted($popups, key=lambda p: $priority.get(p.get('category'), 99))" failed: Robot Framework variable '$priority' is used in a scope where it cannot be seen.</status>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>id:some-button</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.179718" elapsed="0.000045"/>
+</kw>
+<kw name="Handle Known Popups" owner="popup_keywords">
+<doc>Scans popups.json in priority order (cross &gt; no &gt; close
+&gt; yes) and clicks the first visible match. Repeats up to
+${max_rounds} times since closing one popup can reveal another.
+Returns the number of popups closed.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180035" elapsed="0.000042"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${is_blocked}</var>
+<arg>Element Should Be Visible</arg>
+<arg>xpath://div[contains(@class,'modal')]</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180148" elapsed="0.000037"/>
+</kw>
+<if>
+<branch type="IF" condition="${is_blocked}">
+<kw name="Handle Unknown Popup With AI Fallback" owner="popup_keywords">
+<var>${dismissed}</var>
+<arg>notes=Blocked checkout flow after clicking some-button</arg>
+<doc>Captures the current unknown popup, asks the AI for a
+suggested category + xpath, CLICKS it right now to actually
+dismiss the popup, and — only if that click succeeded — registers
+the xpath into popups.json so future runs handle it via
+`Handle Known Popups` without needing the AI again.
+Returns True if the popup was dismissed, False otherwise.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180420" elapsed="0.000041"/>
+</kw>
+<if>
+<branch type="IF" condition="not ${dismissed}">
+<kw name="Log" owner="BuiltIn">
+<arg>Could not auto-dismiss popup — check popup_screenshots/ for manual review.</arg>
+<arg>WARN</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180559" elapsed="0.000034"/>
+</kw>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180509" elapsed="0.000113"/>
+</branch>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180502" elapsed="0.000139"/>
+</if>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180240" elapsed="0.000409"/>
+</branch>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180232" elapsed="0.000432"/>
+</if>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="NOT RUN" start="2026-07-24T23:09:12.180706" elapsed="0.000033"/>
+</kw>
+<status status="FAIL" start="2026-07-24T23:09:05.988755" elapsed="6.192099">Evaluating expression "sorted($popups, key=lambda p: $priority.get(p.get('category'), 99))" failed: Robot Framework variable '$priority' is used in a scope where it cannot be seen.</status>
+</test>
+<status status="FAIL" start="2026-07-24T23:09:05.872137" elapsed="6.315231"/>
+</suite>
+<status status="FAIL" start="2026-07-24T23:09:05.858738" elapsed="6.330271"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Popup Handling" id="s1" pass="0" fail="1" skip="0">Popup Handling</stat>
+<stat name="Popup Handling Example" id="s1-s1" pass="0" fail="1" skip="0">Popup Handling.Popup Handling Example</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
