@@ -1,4 +1,5 @@
 *** Settings ***
+Library    ../libraries/quarter_utils.py
 Resource    ../resources/common/common.resource
 
 *** Variables ***
@@ -20,7 +21,8 @@ Click Menu Button
 Click Quarter From Menu
     [Documentation]    Selects the requested quarter option from the opened menu.
     [Arguments]    ${quarter}    ${timeout}=${DEFAULT_TIMEOUT}
-    ${option_locator}=    Replace String    ${DROPDOWN_OPTION_TEMPLATE}    {quarter}    ${quarter}
+    ${normalized_quarter}=    Normalize Quarter Value    ${quarter}
+    ${option_locator}=    Replace String    ${DROPDOWN_OPTION_TEMPLATE}    {quarter}    ${normalized_quarter}
     Wait And Click Element    ${option_locator}    ${timeout}
 
 Click Reports Menu Item

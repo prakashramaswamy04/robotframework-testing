@@ -12,20 +12,22 @@ Wait And Click Element
     Wait Until Element Is Visible    ${locator}    timeout=${timeout}
     Wait Until Element Is Enabled    ${locator}    timeout=${timeout}
     Scroll Element Into View Safely    ${locator}
-    Log Element Readiness    ${locator}
     Element Should Be Clickable    ${locator}
     ${seconds}=    Convert Time    ${timeout}    result_format=number
     ${max_seconds}=    Convert Time    ${MAX_CLICKABLE_TIMEOUT}    result_format=number
     ${capped}=    Set Variable If    ${seconds} < ${max_seconds}    ${seconds}    ${max_seconds}
     ${retry_interval_seconds}=    Convert Time    ${RETRY_INTERVAL}    result_format=number
+    ${attempts}=    Evaluate    int(${capped}/${retry_interval_seconds}) + 1
+    ${range_end}=    Evaluate    ${attempts} + 1
     ${attempt_count}=    Set Variable    0
-    FOR    ${index}    IN RANGE    1    21
+    FOR    ${index}    IN RANGE    1    ${range_end}
         ${attempt_count}=    Set Variable    ${index}
         ${status}=    Run Keyword And Return Status    Click Element    ${locator}
         Exit For Loop If    ${status}
         Run Keyword If    ${index} * ${retry_interval_seconds} > ${capped}    Fail    msg=Click failed after ${index} attempts within ${capped} seconds
         Sleep    ${RETRY_INTERVAL}
     END
+    Log Element Readiness    ${locator}
     #Log To Console    Click succeeded after ${attempt_count} attempts
 
 Wait Until Element Is Clickable
@@ -40,8 +42,10 @@ Wait Until Element Is Clickable
     ${max_seconds}=    Convert Time    ${MAX_CLICKABLE_TIMEOUT}    result_format=number
     ${capped}=    Set Variable If    ${seconds} < ${max_seconds}    ${seconds}    ${max_seconds}
     ${retry_interval_seconds}=    Convert Time    ${RETRY_INTERVAL}    result_format=number
+    ${attempts}=    Evaluate    int(${capped}/${retry_interval_seconds}) + 1
+    ${range_end}=    Evaluate    ${attempts} + 1
     ${attempt_count}=    Set Variable    0
-    FOR    ${index}    IN RANGE    1    21
+    FOR    ${index}    IN RANGE    1    ${range_end}
         ${attempt_count}=    Set Variable    ${index}
         ${status}=    Run Keyword And Return Status    Click Element    ${locator}
         Exit For Loop If    ${status}
@@ -62,31 +66,34 @@ Element Should Be Clickable
     ${attempts}=    Evaluate    int(${capped}/${retry_interval_seconds}) + 1
     ${range_end}=    Evaluate    ${attempts} + 1
     FOR    ${index}    IN RANGE    1    ${range_end}
-        ${status_get}    ${element}=    Run Keyword And Ignore Error    Get WebElement    ${locator}
-        IF    '${status_get}' == 'PASS'
-            ${is_clickable}=    Execute Javascript
-            ...    var el = arguments[0];
-            ...    try {
-            ...      var r = el.getBoundingClientRect();
-            ...      var s = window.getComputedStyle(el);
-            ...      var visible = (r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && parseFloat(s.opacity||1) > 0);
-            ...      var enabled = (typeof el.disabled === 'undefined' ? true : !el.disabled) && s.pointerEvents !== 'none';
-            ...      if (!visible || !enabled) return false;
-            ...      var x = r.left + r.width/2;
-            ...      var y = r.top + r.height/2;
-            ...      var top = document.elementFromPoint(x, y);
-            ...      if (!top) return false;
-            ...      while (top && top.shadowRoot) { top = top.shadowRoot.elementFromPoint(x, y); }
-            ...      return (el === top || el.contains(top));
-            ...    } catch (e) { return false; }
-            ...    ARGUMENTS    ${element}
-            IF    ${is_clickable}
-                Return From Keyword
-            END
-        END
+        ${status_click}    ${is_clickable}=    Run Keyword And Ignore Error    Get Element Clickable Status    ${locator}
+        Run Keyword If    '${status_click}' == 'PASS' and ${is_clickable}    Return From Keyword
         Sleep    ${RETRY_INTERVAL}
     END
     Fail    msg=Element '${locator}' not clickable after ${capped} seconds
+
+Get Element Clickable Status
+    [Documentation]    Returns true if the locator points to an element that is
+    ...    visible, enabled and not blocked by CSS overlay or pointer interception.
+    [Arguments]    ${locator}
+    ${element}=    Get WebElement    ${locator}
+    ${is_clickable}=    Execute Javascript
+    ...    var el = arguments[0];
+    ...    try {
+    ...      var r = el.getBoundingClientRect();
+    ...      var s = window.getComputedStyle(el);
+    ...      var visible = (r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && parseFloat(s.opacity||1) > 0);
+    ...      var enabled = (typeof el.disabled === 'undefined' ? true : !el.disabled) && s.pointerEvents !== 'none';
+    ...      if (!visible || !enabled) return false;
+    ...      var x = r.left + r.width/2;
+    ...      var y = r.top + r.height/2;
+    ...      var top = document.elementFromPoint(x, y);
+    ...      if (!top) return false;
+    ...      while (top && top.shadowRoot) { top = top.shadowRoot.elementFromPoint(x, y); }
+    ...      return (el === top || el.contains(top));
+    ...    } catch (e) { return false; }
+    ...    ARGUMENTS    ${element}
+    Return From Keyword    ${is_clickable}
 
 Scroll To Element And Click
     [Documentation]    Scrolls the element into view - useful when it's below the fold
@@ -118,14 +125,15 @@ Get Text From Element
     Wait Until Element Is Visible    ${locator}    timeout=${timeout}
     Wait Until Element Is Enabled    ${locator}    timeout=${timeout}
     Scroll Element Into View Safely    ${locator}
-    Log Element Readiness    ${locator}
     Element Should Be Clickable    ${locator}
     ${seconds}=    Convert Time    ${timeout}    result_format=number
     ${max_seconds}=    Convert Time    ${MAX_CLICKABLE_TIMEOUT}    result_format=number
     ${capped}=    Set Variable If    ${seconds} < ${max_seconds}    ${seconds}    ${max_seconds}
     ${retry_interval_seconds}=    Convert Time    ${RETRY_INTERVAL}    result_format=number
+    ${attempts}=    Evaluate    int(${capped}/${retry_interval_seconds}) + 1
+    ${range_end}=    Evaluate    ${attempts} + 1
     ${attempt_count}=    Set Variable    0
-    FOR    ${index}    IN RANGE    1    21
+    FOR    ${index}    IN RANGE    1    ${range_end}
         ${attempt_count}=    Set Variable    ${index}
         ${status}=    Run Keyword And Return Status    Get Text    ${locator}
         Exit For Loop If    ${status}
@@ -133,7 +141,8 @@ Get Text From Element
         Sleep    ${RETRY_INTERVAL}
     END
     ${text}=    Get Text    ${locator}
-    Return    ${text}
+    Log Element Readiness    ${locator}
+    [Return]    ${text}
 
 Scroll Element Into View Safely
     [Documentation]    Scrolls the element into the center of the viewport, verifies it's in view, and focuses it for better reliability.
@@ -155,7 +164,7 @@ Log Element Readiness
     [Arguments]    ${locator}
     ${visible_status}=    Run Keyword And Return Status    Element Should Be Visible    ${locator}
     ${enabled_status}=    Run Keyword And Return Status    Element Should Be Enabled    ${locator}
-    ${xpath_status}=    Set Variable    Element '${locator}' visible=${visible_status}, enabled=${enabled_status}
+    Log    Element '${locator}' visible=${visible_status}, enabled=${enabled_status}
 
 Element Should Be In Viewport
     [Documentation]    Checks whether the element is fully visible inside the current browser viewport.
@@ -172,24 +181,27 @@ Element Should Be In Viewport
     ...    ARGUMENTS    ${element}
     Should Be True    ${is_in_viewport}    msg=Element '${locator}' is not in viewport
 
-Wait And Input Text
-    [Documentation]    Waits until the field is visible and enabled, then types into it.
-    ...    Uses SeleniumLibrary's Input Text, which clears any existing value first.
-    [Arguments]    ${locator}    ${text}    ${timeout}=${DEFAULT_TIMEOUT}
+
+Prepare Element
+    [Documentation]    Common preparation performed before interacting with an element.
+    [Arguments]    ${locator}    ${timeout}=${DEFAULT_TIMEOUT}
     Wait Until Element Is Visible    ${locator}    timeout=${timeout}
     Wait Until Element Is Enabled    ${locator}    timeout=${timeout}
     Scroll Element Into View Safely    ${locator}
     Log Element Readiness    ${locator}
+
+Wait And Input Text
+    [Documentation]    Waits until the field is visible and enabled, then types into it.
+    ...    Uses SeleniumLibrary's Input Text, which clears any existing value first.
+    [Arguments]    ${locator}    ${text}    ${timeout}=${DEFAULT_TIMEOUT}
+    Prepare Element    ${locator}    ${timeout}
     Input Text    ${locator}    ${text}
 
 Wait And Select From List By Label
     [Documentation]    Waits until the dropdown is visible and enabled, then selects
     ...    an option by its visible label.
     [Arguments]    ${locator}    ${label}    ${timeout}=${DEFAULT_TIMEOUT}
-    Wait Until Element Is Visible    ${locator}    timeout=${timeout}
-    Wait Until Element Is Enabled    ${locator}    timeout=${timeout}
-    Scroll Element Into View Safely    ${locator}
-    Log Element Readiness    ${locator}
+    Prepare Element    ${locator}    ${timeout}
     Select From List By Label    ${locator}    ${label}
 
 Wait And Clear Text
